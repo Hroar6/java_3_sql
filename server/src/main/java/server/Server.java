@@ -12,7 +12,8 @@ public class Server {
 
     public Server() {
         clients = new CopyOnWriteArrayList<>();
-        authService = new SimpleAuthService();
+        authService = new SQLAuthService();
+        SQLHandler.connect();
         ServerSocket server = null;
         Socket socket = null;
         final int PORT = 8189;
