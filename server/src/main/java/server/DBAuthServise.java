@@ -1,9 +1,6 @@
 package server;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SQLAuthService implements AuthService {
+public class DBAuthServise implements AuthService {
     @Override
     public String getNicknameByLoginAndPassword(String login, String password) {
         return SQLHandler.getNicknameByLoginAndPassword(login, password);
@@ -14,8 +11,9 @@ public class SQLAuthService implements AuthService {
         return SQLHandler.registration(login, password, nickname);
     }
 
+
     @Override
-    public boolean changeNick(String nickname, String newNick) {
-        return SQLHandler.changeNick(nickname, newNick);
+    public boolean changeNick(String oldNickname, String newNickname) {
+        return SQLHandler.changeNick(oldNickname, newNickname);
     }
 }
