@@ -52,6 +52,7 @@ public class Controller implements Initializable {
 
     private boolean authenticated;
     private String nickname;
+    private String login;
 
     private void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -65,6 +66,7 @@ public class Controller implements Initializable {
         if (!authenticated) {
             nickname = "";
             setTitle("Балабол");
+            History.stop();
         } else {
             setTitle(String.format("[ %s ] - Балабол", nickname));
         }
@@ -99,20 +101,20 @@ public class Controller implements Initializable {
 
             new Thread(() -> {
                 try {
-                    //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
 
                         if (str.startsWith("/authok ")) {
                             nickname = str.split("\\s")[1];
                             setAuthenticated(true);
+                            History.start(login);
                             break;
                         }
 
                         if (str.startsWith("/regok")) {
                             regController.addMessageTextArea("Регистрация прошла успешно");
                         }
-                        if (str.startsWith("/regno")){
+                        if (str.startsWith("/regno")) {
                             regController.addMessageTextArea("Зарегистрироватся не удалось\n" +
                                     " возможно такой логин или никнейм уже заняты");
                         }
@@ -139,6 +141,7 @@ public class Controller implements Initializable {
                             }
                         } else {
                             textArea.appendText(str + "\n");
+                            History.writeMsg(str);
                         }
                     }
                 } catch (IOException e) {
@@ -180,6 +183,9 @@ public class Controller implements Initializable {
 
         String msg = String.format("/auth %s %s",
                 loginField.getText().trim(), passwordField.getText().trim());
+
+        login = loginField.getText().trim();
+
         try {
             out.writeUTF(msg);
             passwordField.clear();
